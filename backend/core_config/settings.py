@@ -9,15 +9,15 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-
-from pathlib import Path
 import os, sys
+from pathlib import Path
 
 
-# This tells Django to look inside the apps/ directory for your custom modules
-sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 
 
 # Quick-start development settings - unsuitable for production
@@ -89,8 +89,12 @@ WSGI_APPLICATION = 'core_config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'health_records_db',
+        'USER': 'postgres',
+        'PASSWORD': 'minorproject', # <-- Type the password you set during the installation wizard
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -130,3 +134,28 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# ==============================================================================
+# DJANGO REST FRAMEWORK & JWT CONFIGURATIONS
+# ==============================================================================
+from datetime import timedelta
+
+REST_FRAMEWORK = {
+    # Force all incoming API requests to be authenticated by default
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),     # Short-lived security token
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),        # Used to seamlessly grab a new access token
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': False,
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'AUTH_HEADER_TYPES': ('Bearer',),                   # Prefix used in frontend headers: "Bearer <token>"
+}
