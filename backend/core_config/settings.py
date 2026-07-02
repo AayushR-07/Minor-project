@@ -92,7 +92,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'health_records_db',
         'USER': 'postgres',
-        'PASSWORD': 'minorproject', # <-- Type the password you set during the installation wizard
+        'PASSWORD': '20610826', # <-- Type the password you set during the installation wizard
         'HOST': 'localhost',
         'PORT': '5432',
     }
